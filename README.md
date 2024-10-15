@@ -7,7 +7,7 @@ Steps to Run the Project
   git clone https://github.com/your-username/simple-todo-app.git
   cd simple-todo-app
 
-2. Install Python Make sure Python is installed on your system. You can download it from python.org
+2. Install Python Make sure Python is installed on your system. You can download it from [python.org](https://www.python.org/)
 
 3. Set Up a Virtual Environment
    python -m venv venv
