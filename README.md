@@ -20,7 +20,7 @@ Steps to Run the Project
   pip install pytest
   pip install pytest-html
 
-6. Download WebDriver Download the appropriate WebDriver (e.g., ChromeDriver for Chrome [clickhere].(https://googlechromelabs.github.io/chrome-for-testing/#stable)) and ensure it's in your system's PATH. 
+6. Download WebDriver Download the appropriate WebDriver (e.g., ChromeDriver for Chrome (https://googlechromelabs.github.io/chrome-for-testing/#stable)) and ensure it's in your system's PATH. 
 
 7. Running the To-Do App Open the index.html file in a web browser:
   path/to/your/index.html
