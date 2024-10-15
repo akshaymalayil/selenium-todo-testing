@@ -24,7 +24,8 @@ Steps to Run the Project
 
 7. Running the To-Do App Open the index.html file in a web browser:
   path/to/your/index.html
-  ![image](https://github.com/user-attachments/assets/e4f2a233-7937-4b8d-9d4a-bde4e5570207)
+![image](https://github.com/user-attachments/assets/070a8632-1a37-4abc-9dbd-fa50dbb86a20)
+
 
 9. Running Automated Tests with pytest Run the tests using the following command:
    pytest todo_tests.py
