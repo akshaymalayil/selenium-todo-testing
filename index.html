@@ -17,34 +17,127 @@
         }
         #todo-list li {
             margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .delete-btn {
+        .delete-btn, .edit-btn {
             margin-left: 10px;
             color: red;
             cursor: pointer;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+        #task-count {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #filter {
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
     <h1>Simple To-Do List</h1>
-    <input type="text" id="new-todo" placeholder="Enter a new task">
+    <input type="text" id="new-todo" placeholder="Enter a new task" aria-label="Task Input">
     <button onclick="addTodo()">Add Task</button>
+    <select id="filter" onchange="filterTasks()">
+        <option value="all">All</option>
+        <option value="completed">Completed</option>
+        <option value="incomplete">Incomplete</option>
+    </select>
     <ul id="todo-list"></ul>
+    <div id="task-count"></div>
 
     <script>
         function addTodo() {
             const input = document.getElementById('new-todo');
             const todoList = document.getElementById('todo-list');
-            if (input.value.trim() !== '') {
+            const taskText = input.value.trim();
+
+            if (taskText !== '') {
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    ${input.value}
-                    <span class="delete-btn" onclick="this.parentElement.remove()">Delete</span>
+                    <span onclick="toggleComplete(this)">${taskText}</span>
+                    <div>
+                        <span class="edit-btn" onclick="editTask(this)">Edit</span>
+                        <span class="delete-btn" onclick="this.parentElement.parentElement.remove(); saveTasks(); updateTaskCount();">Delete</span>
+                    </div>
                 `;
                 todoList.appendChild(li);
                 input.value = '';
+                saveTasks();
+                updateTaskCount();
             }
         }
+
+        function toggleComplete(element) {
+            element.classList.toggle('completed');
+            saveTasks();
+        }
+
+        function editTask(element) {
+            const taskSpan = element.parentElement.previousElementSibling;
+            const newTaskText = prompt("Edit the task:", taskSpan.textContent);
+            if (newTaskText !== null && newTaskText.trim() !== '') {
+                taskSpan.textContent = newTaskText.trim();
+                saveTasks();
+            }
+        }
+
+        function saveTasks() {
+            const tasks = [];
+            document.querySelectorAll('#todo-list li').forEach(task => {
+                tasks.push({
+                    text: task.querySelector('span').textContent,
+                    completed: task.querySelector('span').classList.contains('completed')
+                });
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function loadTasks() {
+            const savedTasks = JSON.parse(localStorage.getItem('tasks'));
+            if (savedTasks) {
+                savedTasks.forEach(taskData => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span onclick="toggleComplete(this)" class="${taskData.completed ? 'completed' : ''}">${taskData.text}</span>
+                        <div>
+                            <span class="edit-btn" onclick="editTask(this)">Edit</span>
+                            <span class="delete-btn" onclick="this.parentElement.parentElement.remove(); saveTasks(); updateTaskCount();">Delete</span>
+                        </div>
+                    `;
+                    document.getElementById('todo-list').appendChild(li);
+                });
+            }
+            updateTaskCount();
+        }
+
+        function filterTasks() {
+            const filter = document.getElementById('filter').value;
+            const tasks = document.querySelectorAll('#todo-list li');
+
+            tasks.forEach(task => {
+                const isCompleted = task.querySelector('span').classList.contains('completed');
+                if (filter === 'completed' && !isCompleted) {
+                    task.style.display = 'none';
+                } else if (filter === 'incomplete' && isCompleted) {
+                    task.style.display = 'none';
+                } else {
+                    task.style.display = 'flex';
+                }
+            });
+        }
+
+        function updateTaskCount() {
+            const taskCount = document.querySelectorAll('#todo-list li').length;
+            document.getElementById('task-count').textContent = `${taskCount} task(s)`;
+        }
+
+        window.onload = loadTasks;
     </script>
 </body>
 </html>
